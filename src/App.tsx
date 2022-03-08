@@ -5,7 +5,7 @@ import QuestionCard from './components/QuestionCard';
 // types
 import { QuestionState, Difficulty } from './API';
 
-type AnswerObject = {
+export type AnswerObject = {
   question: string;
   answer: string;
   correct: boolean;
@@ -38,12 +38,33 @@ const App = () => {
   }
 
   const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {
-    
+    if (!gameOver) {
+      const answer = e.currentTarget.value;
+      // check answer against correct answer
+      const correct = questions[number].correct_answer === answer;
+      // add score if answer is correct
+      if (correct) setScore(prev => prev + 1)
+      // save answer in the array for user answers
+      const AnswerObject = {
+        question: questions[number].question,
+        answer,
+        correct,
+        correctAnswer: questions[number].correct_answer,
+      }
+      setUserAnswers((prev) => [...prev, AnswerObject]);
+    }
   }
 
   const nextQuestion = () => {
+    // move on to the next question if not the last question
+    const nextQuestion = number + 1;
 
-  }
+    if (nextQuestion === TOTAL_QUESTIONS) {
+      setGameOver(true);
+    } else {
+      setNumber(nextQuestion);
+    }
+  };
 
   return (
     <div className="App">
@@ -52,7 +73,7 @@ const App = () => {
         <button className='start' onClick={startTrivia}>Start</button>
         : null}
 
-      {!gameOver ? <p className='score'>Score:</p> : null}
+      {!gameOver ? <p className='score'>Score: {score}</p> : null}
       {loading ? <p>Loading Questions...</p> : null}
       {!loading && !gameOver && (
         <QuestionCard
