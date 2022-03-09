@@ -1,3 +1,3 @@
 # quiz-app
 
-A tutorial app to learn Typescript.
+A tutorial app to learn Typescript with styled components.
